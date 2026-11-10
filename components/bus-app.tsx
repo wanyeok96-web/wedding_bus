@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { EVENT, GROUP_LABEL, GROUPS, SEAT_COUNT, TRIP_HINT, TRIP_LABEL, TRIPS } from "@/lib/config";
 import { formatPhone } from "@/lib/format";
 import type { GroupType, PublicReservation, SeatMap, Trip } from "@/lib/types";
+import { BookingDoneDialog } from "./booking-done-dialog";
 import { LookupDialog } from "./lookup-dialog";
 import { PhoneInput, type PhoneParts } from "./phone-input";
 import { SeatMap as BusSeatMap } from "./seat-map";
@@ -49,6 +50,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
   const [error, setError] = useState("");
   const [done, setDone] = useState<(PublicReservation & { phone: string }) | null>(null);
   const [lookupOpen, setLookupOpen] = useState(false);
+  const [doneOpen, setDoneOpen] = useState(false);
   const seatRef = useRef<number | null>(null);
   seatRef.current = seat;
 
@@ -148,6 +150,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
       }
       if (data.seats) applySeats(data.seats);
       setDone({ ...data.reservation, phone });
+      setDoneOpen(true);
       setSeat(null);
       setNote("");
     } catch {
@@ -158,6 +161,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
   }
 
   const closeLookup = useCallback(() => setLookupOpen(false), []);
+  const closeDone = useCallback(() => setDoneOpen(false), []);
 
   return (
     <>
@@ -304,6 +308,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
         </footer>
       </main>
       {lookupOpen ? <LookupDialog onClose={closeLookup} /> : null}
+      {done && doneOpen ? <BookingDoneDialog reservation={done} onClose={closeDone} /> : null}
     </>
   );
 }

@@ -5,7 +5,7 @@ export const DEADLINE_ISO = "2026-12-02T13:00:00+09:00";
 export const EVENT = {
   dateLabel: "2026년 12월 5일 토요일",
   ceremony: "16:20",
-  departAt: "14:30",
+  departAt: "14:40",
   returnAt: "18:10",
   deadlineLabel: "12월 2일 수요일 13:00",
   fromName: "이솔고등학교",

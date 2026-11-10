@@ -29,7 +29,7 @@ export default function OpenGraphImage() {
           <span>IVEX</span>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 40 }}>
-          <span>14:30</span>
+          <span>14:40</span>
           <span>27 SEATS</span>
           <span>18:10</span>
         </div>

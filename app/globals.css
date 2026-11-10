@@ -548,3 +548,199 @@ th { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; }
 @media (prefers-reduced-motion: reduce) {
   .seat { transition: none; }
 }
+
+.done-dialog {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.done-body {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 22px 22px 8px;
+}
+
+.done-thanks { margin: 14px 0 18px; line-height: 1.7; }
+
+.done-seat {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.done-seat .seat-no {
+  margin: 0;
+  font-family: var(--font-num), "Malgun Gothic", sans-serif;
+  font-size: 76px;
+  line-height: 1;
+}
+
+.done-seat p { margin: 2px 0; }
+
+.done-seat .fine { margin: 6px 0 0; }
+
+.done-section { margin-top: 18px; }
+
+.done-section h3 {
+  margin: 0 0 10px;
+  font-family: var(--font-serif), "Malgun Gothic", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.done-legs { display: grid; gap: 12px; margin: 0; }
+
+.done-legs > div {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 10px;
+}
+
+.done-legs dt { font-weight: 700; }
+
+.done-legs dd { margin: 0; line-height: 1.6; }
+
+.done-strong { margin: 14px 0 0; font-weight: 700; line-height: 1.6; }
+
+.done-notice {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 2px solid var(--ink);
+}
+
+.done-notice p { margin: 0; line-height: 1.6; }
+
+.done-notice p + p { margin-top: 6px; font-size: 14px; }
+
+.done-notice .done-strong { margin: 0; }
+
+.done-foot { margin: 16px 0 6px; }
+
+.done-actions {
+  flex: 0 0 auto;
+  padding: 12px 22px calc(16px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--ink);
+  background: var(--paper);
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.admin-actions .ghost,
+.admin-actions .solid { width: auto; padding: 0 16px; }
+
+.print-area { display: none; }
+
+@page { size: A4 portrait; margin: 12mm; }
+
+@media print {
+  html, body { background: #fff; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .admin-screen, .backdrop, .skip { display: none !important; }
+  .print-area { display: block; color: #111; font-size: 11pt; }
+  .print-page { break-inside: auto; }
+  .print-break { break-after: page; }
+
+  .print-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #111;
+  }
+
+  .print-head h2 {
+    margin: 0;
+    font-family: var(--font-serif), "Malgun Gothic", sans-serif;
+    font-size: 24pt;
+    font-weight: 400;
+  }
+
+  .print-eyebrow { margin: 0 0 4px; font-size: 8pt; letter-spacing: 0.14em; }
+
+  .print-meta { margin: 0; font-size: 9pt; text-align: right; }
+
+  .print-legs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8mm;
+  }
+
+  .print-leg h3 {
+    margin: 0 0 2px;
+    font-size: 10.5pt;
+    font-weight: 700;
+  }
+
+  .print-leg .print-meta { margin-bottom: 6px; text-align: left; }
+
+  .print-bus {
+    padding: 8px;
+    border: 1.5px solid #111;
+    border-radius: 28px 28px 8px 8px;
+  }
+
+  .print-cab {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 6px 6px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #111;
+    font-size: 8pt;
+  }
+
+  .print-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 10px 1fr;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .print-seat {
+    display: flex;
+    flex-direction: column;
+    min-height: 19mm;
+    padding: 3px 4px;
+    border: 1px solid #111;
+    break-inside: avoid;
+  }
+
+  .print-seat.filled { background: #fff3a6; }
+
+  .print-no { font-family: var(--font-num), "Malgun Gothic", sans-serif; font-size: 9pt; }
+
+  .print-name { margin-top: 2px; font-size: 10.5pt; font-weight: 700; line-height: 1.2; }
+
+  .print-group { margin-top: auto; font-size: 7pt; color: #444; }
+
+  .print-table { width: 100%; min-width: 0; border-collapse: collapse; }
+
+  .print-table th,
+  .print-table td {
+    padding: 5px 6px;
+    border: 1px solid #111;
+    font-size: 9.5pt;
+    vertical-align: middle;
+  }
+
+  .print-table th { background: #111; color: #fff; font-weight: 700; letter-spacing: 0; }
+
+  .print-table tr { break-inside: avoid; }
+
+  .print-table thead { display: table-header-group; }
+
+  .print-strong { font-weight: 700; }
+
+  .print-check { text-align: center; font-size: 12pt; }
+}
