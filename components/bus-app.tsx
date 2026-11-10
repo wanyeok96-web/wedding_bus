@@ -44,7 +44,6 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
   const [phoneParts, setPhoneParts] = useState<PhoneParts>(["010", "", ""]);
   const phone = phoneParts.join("");
   const [group, setGroup] = useState<GroupType | "">("");
-  const [note, setNote] = useState("");
   const [website, setWebsite] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
@@ -133,7 +132,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
       const response = await fetch("/api/book", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ seatNo: seat, name, phone, trip, groupType: group, note, website }),
+        body: JSON.stringify({ seatNo: seat, name, phone, trip, groupType: group, website }),
       });
       const data = (await response.json()) as {
         ok?: boolean;
@@ -152,7 +151,6 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
       setDone({ ...data.reservation, phone });
       setDoneOpen(true);
       setSeat(null);
-      setNote("");
     } catch {
       setError(ERROR_TEXT.server);
     } finally {
@@ -273,15 +271,6 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
                     </button>
                   ))}
                 </div>
-                <label className="field">
-                  <span>메모</span>
-                  <textarea
-                    value={note}
-                    onChange={(event) => setNote(event.target.value)}
-                    maxLength={200}
-                    placeholder="함께 앉고 싶은 분, 요청 사항"
-                  />
-                </label>
                 <div className="hp" aria-hidden="true">
                   <label>
                     website

@@ -56,6 +56,7 @@ export function PrintSheet({ rows, mode, printedAt }: { rows: Reservation[]; mod
   const sorted = [...rows].sort((a, b) => a.seatNo - b.seatNo || a.createdAt.localeCompare(b.createdAt));
   const showSeats = mode !== "roster";
   const showRoster = mode !== "seats";
+  const hasNotes = rows.some((row) => row.note.trim() !== "");
 
   return (
     <div className="print-area" aria-hidden="true">
@@ -97,7 +98,7 @@ export function PrintSheet({ rows, mode, printedAt }: { rows: Reservation[]; mod
                 <th>성함</th>
                 <th>연락처</th>
                 <th>구분</th>
-                <th>메모</th>
+                {hasNotes ? <th>메모</th> : null}
                 <th>가는 편</th>
                 <th>오는 편</th>
               </tr>
@@ -113,7 +114,7 @@ export function PrintSheet({ rows, mode, printedAt }: { rows: Reservation[]; mod
                     <td className="print-strong">{row.name}</td>
                     <td>{formatPhone(row.phone)}</td>
                     <td>{GROUP_LABEL[row.groupType]}</td>
-                    <td>{row.note}</td>
+                    {hasNotes ? <td>{row.note}</td> : null}
                     <td className="print-check">{legs.includes("outbound") ? "□" : "–"}</td>
                     <td className="print-check">{legs.includes("inbound") ? "□" : "–"}</td>
                   </tr>
@@ -121,7 +122,7 @@ export function PrintSheet({ rows, mode, printedAt }: { rows: Reservation[]; mod
               })}
               {sorted.length === 0 ? (
                 <tr>
-                  <td colSpan={9}>예약이 없습니다.</td>
+                  <td colSpan={hasNotes ? 9 : 8}>예약이 없습니다.</td>
                 </tr>
               ) : null}
             </tbody>

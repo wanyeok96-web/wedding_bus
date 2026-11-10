@@ -130,8 +130,10 @@ export function AdminClient() {
     }
   }
 
+  const hasNotes = rows.some((row) => row.note.trim() !== "");
+
   async function copyList() {
-    const header = ["좌석", "탑승", "성함", "연락처", "구분", "메모", "예약시각"].join("\t");
+    const header = ["좌석", "탑승", "성함", "연락처", "구분", ...(hasNotes ? ["메모"] : []), "예약시각"].join("\t");
     const body = rows
       .map((row) =>
         [
@@ -140,7 +142,7 @@ export function AdminClient() {
           row.name,
           formatPhone(row.phone),
           GROUP_LABEL[row.groupType],
-          row.note,
+          ...(hasNotes ? [row.note] : []),
           formatWhen(row.createdAt),
         ].join("\t"),
       )
@@ -217,7 +219,7 @@ export function AdminClient() {
                 <th>성함</th>
                 <th>연락처</th>
                 <th>구분</th>
-                <th>메모</th>
+                {hasNotes ? <th>메모</th> : null}
                 <th>시각</th>
                 <th>관리</th>
               </tr>
@@ -230,7 +232,7 @@ export function AdminClient() {
                   <td>{row.name}</td>
                   <td>{formatPhone(row.phone)}</td>
                   <td>{GROUP_LABEL[row.groupType]}</td>
-                  <td>{row.note}</td>
+                  {hasNotes ? <td>{row.note}</td> : null}
                   <td>{formatWhen(row.createdAt)}</td>
                   <td>
                     {confirmId === row.id ? (
