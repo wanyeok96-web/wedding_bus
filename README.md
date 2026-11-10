@@ -29,3 +29,7 @@ Supabase 키가 없으면 개발 서버는 이 컴퓨터의 `.data` 폴더에만
 - `ADMIN_PASSWORD`
 
 관리 화면은 `/admin`입니다.
+
+## 글꼴
+
+`public/fonts`에는 한국교육학술정보원(KERIS)의 학교안심 포스터 B, 학교안심 출석부 L·B를 웹용(woff2)으로 변환해 넣었습니다.

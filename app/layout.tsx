@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
-const FONT_CSS =
-  "https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Noto+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@500;600&display=swap";
-
 export const metadata: Metadata = {
   title: "결혼식 버스 좌석 예약",
   description: "2026년 12월 5일 이솔고등학교 14:30 출발, 아이벡스 컨벤션 18:10 귀환. 27인승 선착순 예약.",
@@ -27,9 +24,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="ko">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="stylesheet" href={FONT_CSS} />
+        <link rel="preload" href="/fonts/hakgyoansim-chulseokbu-l.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/hakgyoansim-poster-b.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
       <body>{children}</body>
     </html>

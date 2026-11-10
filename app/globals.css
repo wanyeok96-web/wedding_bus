@@ -1,13 +1,45 @@
+@font-face {
+  font-family: "Hakgyoansim Chulseokbu";
+  src: url("/fonts/hakgyoansim-chulseokbu-l.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hakgyoansim Chulseokbu";
+  src: url("/fonts/hakgyoansim-chulseokbu-b.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hakgyoansim Poster";
+  src: url("/fonts/hakgyoansim-poster-b.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
   --ink: #111111;
   --muted: #4d4d4d;
   --line: #111111;
   --paper: #ffffff;
-  --font-sans: "Noto Sans KR";
-  --font-serif: "Noto Serif KR";
-  --font-num: "Instrument Serif";
+  --marker: #ffe14d;
+  --accent: #e5322d;
+  --font-sans: "Hakgyoansim Chulseokbu";
+  --font-serif: "Hakgyoansim Poster";
+  --font-num: "Hakgyoansim Poster";
 }
+
+.mark {
+  padding: 0 0.12em;
+  background: linear-gradient(transparent 58%, var(--marker) 58%, var(--marker) 92%, transparent 92%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.accent { color: var(--accent); }
 
 * { box-sizing: border-box; }
 
@@ -17,7 +49,7 @@ body {
   margin: 0;
   color: var(--ink);
   background: var(--paper);
-  font-family: var(--font-sans), "Noto Sans KR", sans-serif;
+  font-family: var(--font-sans), "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   font-size: 16px;
   line-height: 1.5;
   word-break: keep-all;
@@ -74,10 +106,10 @@ a { color: inherit; }
 
 h1 {
   margin: 0;
-  font-family: var(--font-serif), "Noto Serif KR", serif;
+  font-family: var(--font-serif), "Malgun Gothic", sans-serif;
   font-weight: 500;
   font-size: clamp(34px, 5vw, 60px);
-  letter-spacing: -0.045em;
+  letter-spacing: -0.02em;
   line-height: 1.12;
 }
 
@@ -96,6 +128,7 @@ h1 span { display: inline; }
 .ghost {
   border: 1px solid var(--ink);
   min-height: 48px;
+  font-weight: 700;
 }
 
 .lookup-btn,
@@ -132,10 +165,10 @@ h1 span { display: inline; }
 .fact strong {
   display: block;
   margin: 8px 0 6px;
-  font-family: var(--font-num), "Instrument Serif", serif;
-  font-size: clamp(34px, 4vw, 48px);
+  font-family: var(--font-num), "Malgun Gothic", sans-serif;
+  font-size: clamp(34px, 4vw, 46px);
   font-weight: 400;
-  line-height: 0.9;
+  line-height: 1;
 }
 
 .fact p { margin: 0; font-size: 13px; line-height: 1.45; }
@@ -193,8 +226,9 @@ h1 span { display: inline; }
   border: 1.5px solid var(--ink);
   background: var(--paper);
   color: var(--ink);
+  font-family: var(--font-num), "Malgun Gothic", sans-serif;
   font-variant-numeric: tabular-nums;
-  font-size: 16px;
+  font-size: 17px;
   user-select: none;
 }
 
@@ -298,6 +332,7 @@ h1 span { display: inline; }
 
 .segment button {
   min-height: 46px;
+  font-weight: 700;
   border: 0;
   border-right: 1px solid var(--ink);
   background: var(--paper);
@@ -312,7 +347,22 @@ h1 span { display: inline; }
 
 .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
 
-.field span { font-size: 12px; letter-spacing: 0.06em; }
+.field > span { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; }
+
+.phone { display: flex; align-items: center; }
+
+.phone-part { display: flex; align-items: center; flex: 4 1 0; min-width: 0; }
+
+.phone-part:first-child { flex-grow: 3; }
+
+.phone-part input {
+  min-width: 0;
+  text-align: center;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+}
+
+.phone-dash { padding: 0 6px; }
 
 .field input,
 .field textarea {
@@ -334,17 +384,18 @@ h1 span { display: inline; }
 
 .actions { display: grid; gap: 8px; margin-top: 4px; }
 
-.error { margin: 0 0 10px; font-size: 14px; }
+.error { margin: 0 0 10px; color: var(--accent); font-size: 14px; font-weight: 700; }
+
+.remain strong { color: var(--accent); font-size: 18px; }
 
 .ticket { border: 1px solid var(--ink); padding: 8px 8px 18px; }
 
 .ticket .seat-no {
   margin: 0;
-  font-family: var(--font-num), "Instrument Serif", serif;
-  font-size: 108px;
+  font-family: var(--font-num), "Malgun Gothic", sans-serif;
+  font-size: 96px;
   font-weight: 400;
-  line-height: 0.82;
-  letter-spacing: -0.04em;
+  line-height: 1;
 }
 
 .ticket p { margin: 8px 8px; }
@@ -401,10 +452,10 @@ h1 span { display: inline; }
 
 .dialog h2 {
   margin: 0;
-  font-family: var(--font-serif), "Noto Serif KR", serif;
-  font-size: 32px;
-  font-weight: 500;
-  letter-spacing: -0.04em;
+  font-family: var(--font-serif), "Malgun Gothic", sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 .close {
@@ -424,7 +475,7 @@ h1 span { display: inline; }
 }
 
 .result { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; }
-.result .seat-no { margin: 0; font-size: 64px; line-height: 0.9; }
+.result .seat-no { margin: 0; font-family: var(--font-num), "Malgun Gothic", sans-serif; font-size: 60px; line-height: 1; }
 .result p { margin: 0; }
 
 .bus.compact { max-width: 280px; margin: 16px 0; padding: 12px; border-radius: 40px 40px 14px 14px; }

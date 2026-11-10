@@ -104,7 +104,7 @@ export function LookupDialog({ onClose }: { onClose: () => void }) {
           <div className="results">
             {results.map((reservation) => (
               <article className="result" key={reservation.id}>
-                <p className="seat-no">{reservation.seatNo}</p>
+                <p className="seat-no"><span className="mark">{reservation.seatNo}</span></p>
                 <p>
                   {TRIP_LABEL[reservation.trip]} · {GROUP_LABEL[reservation.groupType]} · {reservation.name}
                 </p>

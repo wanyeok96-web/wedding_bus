@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EVENT, GROUP_LABEL, GROUPS, SEAT_COUNT, TRIP_HINT, TRIP_LABEL, TRIPS } from "@/lib/config";
-import { formatPhone, normalizePhone } from "@/lib/format";
+import { formatPhone } from "@/lib/format";
 import type { GroupType, PublicReservation, SeatMap, Trip } from "@/lib/types";
 import { LookupDialog } from "./lookup-dialog";
+import { PhoneInput, type PhoneParts } from "./phone-input";
 import { SeatMap as BusSeatMap } from "./seat-map";
 
 const ERROR_TEXT: Record<string, string> = {
@@ -39,7 +40,8 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
   const [trip, setTrip] = useState<Trip>("round");
   const [seat, setSeat] = useState<number | null>(null);
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phoneParts, setPhoneParts] = useState<PhoneParts>(["010", "", ""]);
+  const phone = phoneParts.join("");
   const [group, setGroup] = useState<GroupType | "">("");
   const [note, setNote] = useState("");
   const [website, setWebsite] = useState("");
@@ -114,8 +116,8 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
       setError("성함을 입력해 주세요.");
       return;
     }
-    if (!/^01[016789]\d{7,8}$/.test(normalizePhone(phone))) {
-      setError("연락처는 010으로 시작하는 휴대폰 번호로 입력해 주세요.");
+    if (!/^01[016789]\d{7,8}$/.test(phone)) {
+      setError("연락처를 010-0000-0000 형식으로 모두 입력해 주세요.");
       return;
     }
     if (!group) {
@@ -145,7 +147,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
         return;
       }
       if (data.seats) applySeats(data.seats);
-      setDone({ ...data.reservation, phone: normalizePhone(phone) });
+      setDone({ ...data.reservation, phone });
       setSeat(null);
       setNote("");
     } catch {
@@ -167,9 +169,9 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
             <h1>
               <span>{EVENT.fromName}</span>
               <span className="arrow" aria-hidden="true">→</span>
-              <span>{EVENT.toName}</span>
+              <span className="mark">{EVENT.toName}</span>
             </h1>
-            <p className="sub">이왕혁 · 김수민 · {EVENT.dateLabel}</p>
+            <p className="sub"><strong>이왕혁 · 김수민</strong> · {EVENT.dateLabel}</p>
           </div>
           <button type="button" className="lookup-btn" onClick={() => setLookupOpen(true)}>
             예약 확인
@@ -179,12 +181,12 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
         <section className="facts" aria-label="운행 정보">
           <div className="fact">
             <small>가는 편</small>
-            <strong>{EVENT.departAt}</strong>
+            <strong><span className="mark">{EVENT.departAt}</span></strong>
             <p>{EVENT.fromName}<br />{EVENT.fromAddress}</p>
           </div>
           <div className="fact">
             <small>오는 편</small>
-            <strong>{EVENT.returnAt}</strong>
+            <strong><span className="mark">{EVENT.returnAt}</span></strong>
             <p>{EVENT.toName}<br />{EVENT.toAddress}</p>
           </div>
           <div className="fact">
@@ -194,8 +196,8 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
           </div>
           <div className="fact">
             <small>예약 마감</small>
-            <strong>13:00</strong>
-            <p>{EVENT.deadlineLabel}<br />선착순 27석</p>
+            <strong className="accent">13:00</strong>
+            <p><span className="accent">{EVENT.deadlineLabel}</span><br />선착순 27석</p>
           </div>
         </section>
 
@@ -220,7 +222,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
 
           <form id="booking" className="panel" onSubmit={submit} noValidate>
             <p className="remain">
-              <span>{TRIP_LABEL[trip]} 가능 {openCount(holds, trip)}석</span>
+              <span>{TRIP_LABEL[trip]} 남은 좌석 <strong>{openCount(holds, trip)}</strong>석</span>
               <button type="button" className="text-btn" onClick={() => void refresh()}>새로고침</button>
             </p>
             {closed ? <p className="banner">예약이 마감되었습니다. 이미 예약한 좌석은 예약 확인에서 볼 수 있습니다.</p> : null}
@@ -236,7 +238,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
             {done ? (
               <div className="ticket" role="status">
                 <p className="eyebrow">예약 확정</p>
-                <p className="seat-no">{done.seatNo}</p>
+                <p className="seat-no"><span className="mark">{done.seatNo}</span></p>
                 <p>{TRIP_LABEL[done.trip]} · {GROUP_LABEL[done.groupType]}</p>
                 <p>{done.name}<br />{formatPhone(done.phone)}</p>
                 <hr className="dashed" />
@@ -260,17 +262,10 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
                   <span>성함</span>
                   <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" maxLength={40} />
                 </label>
-                <label className="field">
-                  <span>연락처</span>
-                  <input
-                    value={phone}
-                    onChange={(event) => setPhone(event.target.value)}
-                    autoComplete="tel"
-                    inputMode="tel"
-                    placeholder="010-0000-0000"
-                    maxLength={13}
-                  />
-                </label>
+                <div className="field" role="group" aria-labelledby="phone-label">
+                  <span id="phone-label">연락처</span>
+                  <PhoneInput value={phoneParts} onChange={setPhoneParts} />
+                </div>
                 <p className="fine">연락처는 좌석 안내와 예약 확인에만 사용합니다.</p>
                 <div className="segment" role="group" aria-label="구분">
                   {GROUPS.map((item) => (
@@ -304,7 +299,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
         </div>
 
         <footer className="foot">
-          <p>예약 마감 {EVENT.deadlineLabel} · 좌석은 선착순입니다.</p>
+          <p>예약 마감 <span className="mark">{EVENT.deadlineLabel}</span> · 좌석은 선착순입니다.</p>
           <Link href="/admin">관리</Link>
         </footer>
       </main>
