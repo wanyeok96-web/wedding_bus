@@ -1,27 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
 import "./globals.css";
 
-const sans = Noto_Sans_KR({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-sans",
-  display: "swap",
-});
-
-const serif = Noto_Serif_KR({
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  variable: "--font-serif",
-  display: "swap",
-});
-
-const numeral = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-num",
-  display: "swap",
-});
+const FONT_CSS =
+  "https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Noto+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@500;600&display=swap";
 
 export const metadata: Metadata = {
   title: "결혼식 버스 좌석 예약",
@@ -45,7 +26,12 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko">
-      <body className={`${sans.variable} ${serif.variable} ${numeral.variable}`}>{children}</body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href={FONT_CSS} />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }
