@@ -189,19 +189,14 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
             <p>{EVENT.fromName}<br />{EVENT.fromAddress}</p>
           </div>
           <div className="fact">
+            <small>예식</small>
+            <strong>{EVENT.ceremony}</strong>
+            <p>{EVENT.toName}<br />{EVENT.toPlace}</p>
+          </div>
+          <div className="fact">
             <small>오는 편</small>
             <strong><span className="mark">{EVENT.returnAt}</span></strong>
             <p>{EVENT.toName}<br />{EVENT.toAddress}</p>
-          </div>
-          <div className="fact">
-            <small>예식</small>
-            <strong>{EVENT.ceremony}</strong>
-            <p>{EVENT.toPlace}<br />{EVENT.toName}</p>
-          </div>
-          <div className="fact">
-            <small>예약 마감</small>
-            <strong className="accent">13:00</strong>
-            <p><span className="accent">{EVENT.deadlineLabel}</span><br />선착순 27석</p>
           </div>
         </section>
 
@@ -303,7 +298,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
         </div>
 
         <footer className="foot">
-          <p>예약 마감 <span className="mark">{EVENT.deadlineLabel}</span> · 좌석은 선착순입니다.</p>
+          <p>27인승 · 좌석은 선착순입니다.</p>
           <Link href="/admin">관리</Link>
         </footer>
       </main>

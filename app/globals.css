@@ -143,7 +143,7 @@ h1 span { display: inline; }
 
 .facts {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   border-bottom: 1px solid var(--line);
 }
 
@@ -529,11 +529,10 @@ th { font-size: 12px; font-weight: 500; letter-spacing: 0.06em; }
 }
 
 @media (max-width: 860px) {
-  .facts { grid-template-columns: 1fr 1fr; }
-  .fact { padding: 14px 12px; border-bottom: 1px solid var(--line); }
-  .fact:nth-child(odd) { padding-left: 0; border-right: 1px solid var(--line); }
-  .fact:nth-child(even) { border-right: 0; padding-right: 0; }
-  .fact:nth-last-child(-n + 2) { border-bottom: 0; }
+  .fact { padding: 14px 10px; }
+  .fact:first-child { padding-left: 0; }
+  .fact strong { font-size: clamp(26px, 7.4vw, 40px); }
+  .fact p { font-size: 12px; }
   .stage { grid-template-columns: 1fr; gap: 28px; }
   .panel { position: static; }
   .top { align-items: flex-start; }

@@ -7,7 +7,6 @@ export const EVENT = {
   ceremony: "16:20",
   departAt: "14:40",
   returnAt: "18:10",
-  deadlineLabel: "12월 2일 수요일 13:00",
   fromName: "이솔고등학교",
   fromAddress: "경기도 화성시 동탄순환대로 7길 10",
   toName: "아이벡스 컨벤션",
