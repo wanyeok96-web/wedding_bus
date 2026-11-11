@@ -17,7 +17,7 @@ Supabase 키가 없으면 개발 서버는 이 컴퓨터의 `.data` 폴더에만
 
 ## Supabase
 
-1. SQL Editor에서 `supabase/schema.sql`을 실행합니다.
+1. SQL Editor에서 `supabase/schema.sql`과 `supabase/events.sql`(신청·취소 기록)을 차례로 실행합니다.
 2. Project Settings → API의 `service_role` 키를 복사합니다. 이 키는 브라우저에 넣지 않습니다.
 
 ## Vercel

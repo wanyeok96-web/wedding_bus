@@ -94,15 +94,17 @@ export function BookingDoneDialog({
 
           <section className="done-notice" aria-label="변경 및 취소 안내">
             <p className="accent done-strong">
-              좌석이나 탑승 편을 변경하시거나 취소하실 경우, 꼭 이왕혁에게 직접 말씀해 주시기 바랍니다.
+              좌석이나 탑승 편을 변경하실 경우, 꼭 이왕혁에게 직접 말씀해 주시기 바랍니다.
             </p>
             <p>
               예약 사이트에서는 직접 변경하실 수 없으며, 다른 분의 좌석과 겹치지 않도록 확인이 필요합니다.
+              <br />
+              예약 취소는 화면 위쪽 <strong>예약 확인 및 취소</strong>에서 직접 하실 수 있습니다.
             </p>
           </section>
 
           <p className="fine done-foot">
-            예약하신 좌석은 언제든 화면 위쪽 <strong>예약 확인</strong>에서 성함과 전화번호 뒷자리로 다시 보실 수 있습니다.
+            예약하신 좌석은 언제든 화면 위쪽 <strong>예약 확인 및 취소</strong>에서 성함과 전화번호 뒷자리로 다시 보실 수 있습니다.
           </p>
         </div>
 

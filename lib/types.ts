@@ -15,7 +15,24 @@ export type Reservation = {
   createdAt: string;
 };
 
-export type PublicReservation = Omit<Reservation, "phone">;
+export type PublicReservation = Omit<Reservation, "phone" | "note">;
+
+export type EventAction = "book" | "cancel" | "edit";
+export type EventActor = "guest" | "admin";
+
+export type ReservationEvent = {
+  id: string;
+  reservationId: string | null;
+  action: EventAction;
+  actor: EventActor;
+  seatNo: number | null;
+  trip: Trip | null;
+  name: string;
+  phone: string;
+  groupType: GroupType | null;
+  detail: string;
+  createdAt: string;
+};
 
 export type SeatMap = {
   outbound: number[];

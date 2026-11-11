@@ -176,7 +176,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
             <p className="sub"><strong>이왕혁 · 김수민</strong> · {EVENT.dateLabel}</p>
           </div>
           <button type="button" className="lookup-btn" onClick={() => setLookupOpen(true)}>
-            예약 확인
+            예약 확인 및 취소
           </button>
         </header>
 
@@ -222,7 +222,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
               <span>{TRIP_LABEL[trip]} 남은 좌석 <strong>{openCount(holds, trip)}</strong>석</span>
               <button type="button" className="text-btn" onClick={() => void refresh()}>새로고침</button>
             </p>
-            {closed ? <p className="banner">예약이 마감되었습니다. 이미 예약한 좌석은 예약 확인에서 볼 수 있습니다.</p> : null}
+            {closed ? <p className="banner">예약이 마감되었습니다. 이미 예약하신 좌석은 예약 확인 및 취소에서 보실 수 있습니다.</p> : null}
             <div className="segment" role="group" aria-label="탑승 구분">
               {TRIPS.map((item) => (
                 <button key={item} type="button" aria-pressed={trip === item} onClick={() => chooseTrip(item)}>
@@ -263,7 +263,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
                   <span id="phone-label">연락처</span>
                   <PhoneInput value={phoneParts} onChange={setPhoneParts} />
                 </div>
-                <p className="fine">연락처는 좌석 안내와 예약 확인에만 사용합니다.</p>
+                <p className="fine">연락처는 좌석 안내와 예약 확인·취소에만 사용합니다.</p>
                 <div className="segment" role="group" aria-label="구분">
                   {GROUPS.map((item) => (
                     <button key={item} type="button" aria-pressed={group === item} onClick={() => setGroup(item)}>
@@ -291,7 +291,7 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
           <Link href="/admin">관리</Link>
         </footer>
       </main>
-      {lookupOpen ? <LookupDialog onClose={closeLookup} /> : null}
+      {lookupOpen ? <LookupDialog onClose={closeLookup} onCancelled={applySeats} /> : null}
       {done && doneOpen ? <BookingDoneDialog reservation={done} onClose={closeDone} /> : null}
     </>
   );

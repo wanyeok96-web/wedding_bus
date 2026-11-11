@@ -6,6 +6,7 @@ import { GROUP_LABEL, SEAT_COUNT, TRIP_LABEL } from "@/lib/config";
 import { formatPhone, formatWhen } from "@/lib/format";
 import type { Reservation } from "@/lib/types";
 import { EditDialog } from "./edit-dialog";
+import { EventLog } from "./event-log";
 import { PrintSheet, type PrintMode } from "./print-sheet";
 
 const PRINT_FILE: Record<PrintMode, string> = {
@@ -46,6 +47,11 @@ export function AdminClient() {
   const [printMode, setPrintMode] = useState<PrintMode | null>(null);
   const [editing, setEditing] = useState<Reservation | null>(null);
   const closeEdit = useCallback(() => setEditing(null), []);
+  const [logKey, setLogKey] = useState(0);
+  const applyRows = useCallback((next: Reservation[]) => {
+    setRows(next);
+    setLogKey((key) => key + 1);
+  }, []);
   const [printedAt, setPrintedAt] = useState("");
 
   useEffect(() => {
@@ -80,6 +86,7 @@ export function AdminClient() {
       return;
     }
     setRows(data.reservations);
+    setLogKey((key) => key + 1);
     setAuthed(true);
     setError("");
   }
@@ -126,7 +133,7 @@ export function AdminClient() {
         body: JSON.stringify({ id }),
       });
       const data = (await response.json()) as { reservations?: Reservation[] };
-      if (response.ok && data.reservations) setRows(data.reservations);
+      if (response.ok && data.reservations) applyRows(data.reservations);
       setConfirmId(null);
     } finally {
       setPending(false);
@@ -264,10 +271,11 @@ export function AdminClient() {
           </table>
         </div>
       ) : null}
+      <EventLog refreshKey={logKey} />
       <p className="foot"><Link href="/">예약 화면</Link></p>
     </main>
     <PrintSheet rows={rows} mode={printMode ?? "all"} printedAt={printedAt || printStamp().label} />
-    {editing ? <EditDialog reservation={editing} rows={rows} onClose={closeEdit} onRows={setRows} /> : null}
+    {editing ? <EditDialog reservation={editing} rows={rows} onClose={closeEdit} onRows={applyRows} /> : null}
     </>
   );
 }
