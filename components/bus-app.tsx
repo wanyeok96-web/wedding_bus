@@ -175,9 +175,6 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
             </h1>
             <p className="sub"><strong>이왕혁 · 김수민</strong> · {EVENT.dateLabel}</p>
           </div>
-          <button type="button" className="lookup-btn" onClick={() => setLookupOpen(true)}>
-            예약 확인 및 취소
-          </button>
         </header>
 
         <section className="facts" aria-label="운행 정보">
@@ -283,6 +280,12 @@ export function BusApp({ initial, localPreview }: { initial: SeatMap; localPrevi
                 </button>
               </>
             )}
+            <div className="lookup-row">
+              <span>이미 예약하셨나요?</span>
+              <button type="button" className="ghost lookup-btn" onClick={() => setLookupOpen(true)}>
+                예약 확인 및 취소
+              </button>
+            </div>
           </form>
         </div>
 

@@ -123,7 +123,6 @@ h1 span { display: inline; }
   font-size: 14px;
 }
 
-.lookup-btn,
 .solid,
 .ghost {
   border: 1px solid var(--ink);
@@ -131,15 +130,24 @@ h1 span { display: inline; }
   font-weight: 700;
 }
 
-.lookup-btn,
 .solid {
   background: var(--ink);
   color: var(--paper);
 }
 
-.lookup-btn { padding: 0 18px; white-space: nowrap; }
-
 .ghost { background: var(--paper); color: var(--ink); }
+
+.lookup-row {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--ink);
+}
+
+.lookup-row > span { color: var(--muted); font-size: 13px; }
+
+.lookup-row .ghost:hover { background: var(--ink); color: var(--paper); }
 
 .facts {
   display: grid;
