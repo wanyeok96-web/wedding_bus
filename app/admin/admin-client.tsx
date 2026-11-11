@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GROUP_LABEL, SEAT_COUNT, TRIP_LABEL } from "@/lib/config";
 import { formatPhone, formatWhen } from "@/lib/format";
 import type { Reservation } from "@/lib/types";
+import { EditDialog } from "./edit-dialog";
 import { PrintSheet, type PrintMode } from "./print-sheet";
 
 const PRINT_FILE: Record<PrintMode, string> = {
@@ -43,6 +44,8 @@ export function AdminClient() {
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [printMode, setPrintMode] = useState<PrintMode | null>(null);
+  const [editing, setEditing] = useState<Reservation | null>(null);
+  const closeEdit = useCallback(() => setEditing(null), []);
   const [printedAt, setPrintedAt] = useState("");
 
   useEffect(() => {
@@ -245,9 +248,14 @@ export function AdminClient() {
                         </button>
                       </div>
                     ) : (
-                      <button type="button" className="row-btn" onClick={() => setConfirmId(row.id)}>
-                        취소
-                      </button>
+                      <div className="confirm-line">
+                        <button type="button" className="row-btn" onClick={() => setEditing(row)}>
+                          수정
+                        </button>
+                        <button type="button" className="row-btn" onClick={() => setConfirmId(row.id)}>
+                          취소
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>
@@ -259,6 +267,7 @@ export function AdminClient() {
       <p className="foot"><Link href="/">예약 화면</Link></p>
     </main>
     <PrintSheet rows={rows} mode={printMode ?? "all"} printedAt={printedAt || printStamp().label} />
+    {editing ? <EditDialog reservation={editing} rows={rows} onClose={closeEdit} onRows={setRows} /> : null}
     </>
   );
 }

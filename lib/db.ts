@@ -4,8 +4,8 @@ import path from "path";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { isClosed } from "./config";
 import { normalizeName } from "./format";
-import { seatMapFrom, seatTaken } from "./rules";
-import type { BookingInput, GroupType, PublicReservation, Reservation, SeatMap, Trip } from "./types";
+import { legsOf, seatMapFrom, seatTaken } from "./rules";
+import type { BookingInput, GroupType, Leg, PublicReservation, Reservation, SeatMap, Trip } from "./types";
 
 export function usesSupabase() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
@@ -213,6 +213,78 @@ export async function listForAdmin() {
   return reservations.sort(
     (a, b) => a.seatNo - b.seatNo || order[a.trip] - order[b.trip] || a.createdAt.localeCompare(b.createdAt),
   );
+}
+
+export async function updateReservation(
+  id: string,
+  input: BookingInput,
+): Promise<{ ok: true } | { ok: false; error: "taken" | "missing" }> {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return { ok: false, error: "missing" };
+  if (!usesSupabase()) {
+    if (process.env.NODE_ENV === "production") throw new SetupError();
+    return withLock(async () => {
+      const reservations = await readFile();
+      const index = reservations.findIndex((reservation) => reservation.id === id);
+      if (index < 0) return { ok: false as const, error: "missing" as const };
+      const others = reservations.filter((reservation) => reservation.id !== id);
+      if (seatTaken(others, input.seatNo, input.trip)) return { ok: false as const, error: "taken" as const };
+      reservations[index] = { ...reservations[index], ...input };
+      await writeFile(reservations);
+      return { ok: true as const };
+    });
+  }
+
+  const db = client();
+  const { data: current, error: findError } = await db.from("reservations").select("id").eq("id", id).maybeSingle();
+  if (findError) {
+    raiseIfSetup(findError);
+    throw new Error(findError.message);
+  }
+  if (!current) return { ok: false, error: "missing" };
+
+  const { data: heldRows, error: holdsError } = await db
+    .from("seat_holds")
+    .select("seat_no, leg")
+    .eq("reservation_id", id);
+  if (holdsError) throw new Error(holdsError.message);
+
+  const held = (heldRows ?? []) as { seat_no: number; leg: Leg }[];
+  const wanted = legsOf(input.trip);
+  const toAdd = wanted.filter((leg) => !held.some((hold) => hold.seat_no === input.seatNo && hold.leg === leg));
+  const toRemove = held.filter((hold) => hold.seat_no !== input.seatNo || !wanted.includes(hold.leg));
+
+  if (toAdd.length > 0) {
+    const { error: insertError } = await db
+      .from("seat_holds")
+      .insert(toAdd.map((leg) => ({ seat_no: input.seatNo, leg, reservation_id: id })));
+    if (insertError) {
+      if (insertError.code === "23505") return { ok: false, error: "taken" };
+      throw new Error(insertError.message);
+    }
+  }
+
+  const { error: updateError } = await db
+    .from("reservations")
+    .update({
+      seat_no: input.seatNo,
+      name: input.name,
+      phone: input.phone,
+      trip: input.trip,
+      group_type: input.groupType,
+      note: input.note,
+    })
+    .eq("id", id);
+  if (updateError) {
+    for (const leg of toAdd) {
+      await db.from("seat_holds").delete().eq("reservation_id", id).eq("seat_no", input.seatNo).eq("leg", leg);
+    }
+    throw new Error(updateError.message);
+  }
+
+  for (const hold of toRemove) {
+    await db.from("seat_holds").delete().eq("reservation_id", id).eq("seat_no", hold.seat_no).eq("leg", hold.leg);
+  }
+  return { ok: true };
 }
 
 export async function cancelReservation(id: string) {

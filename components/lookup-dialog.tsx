@@ -108,7 +108,6 @@ export function LookupDialog({ onClose }: { onClose: () => void }) {
                 <p>
                   {TRIP_LABEL[reservation.trip]} · {GROUP_LABEL[reservation.groupType]} · {reservation.name}
                 </p>
-                {reservation.note ? <p>{reservation.note}</p> : null}
                 <p className="fine">{formatWhen(reservation.createdAt)} 예약</p>
               </article>
             ))}

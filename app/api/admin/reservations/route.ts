@@ -1,6 +1,7 @@
 import { isAdminRequest } from "@/lib/admin";
-import { cancelReservation, listForAdmin, SetupError } from "@/lib/db";
+import { cancelReservation, listForAdmin, SetupError, updateReservation } from "@/lib/db";
 import { json } from "@/lib/http";
+import { validateBooking } from "@/lib/validate";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -13,6 +14,32 @@ export async function GET(request: Request) {
     if (error instanceof SetupError) return json({ error: "setup" }, 503);
     console.error("admin list failed");
     return json({ error: "server" }, 500);
+  }
+}
+
+export async function PATCH(request: Request) {
+  if (!isAdminRequest(request)) return json({ error: "auth" }, 401);
+  let body: Record<string, unknown>;
+  try {
+    body = (await request.json()) as Record<string, unknown>;
+  } catch {
+    return json({ ok: false, error: "invalid" }, 400);
+  }
+  const id = typeof body.id === "string" ? body.id : "";
+  const parsed = validateBooking({ ...body, website: "" });
+  if (!id || !parsed.ok) return json({ ok: false, error: "invalid" }, 400);
+
+  try {
+    const result = await updateReservation(id, parsed.value);
+    const reservations = await listForAdmin();
+    if (!result.ok) {
+      return json({ ok: false, error: result.error, reservations }, result.error === "taken" ? 409 : 404);
+    }
+    return json({ ok: true, reservations });
+  } catch (error) {
+    if (error instanceof SetupError) return json({ ok: false, error: "setup" }, 503);
+    console.error("admin update failed");
+    return json({ ok: false, error: "server" }, 500);
   }
 }
 
